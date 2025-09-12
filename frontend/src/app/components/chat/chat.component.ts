@@ -10,6 +10,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   messages: any[] = [];
   messageContent = '';
   currentUserId = 1; // Simuler utilisateur client
+  currentUserRole = 'CLIENT';
 
   constructor(private websocketService: WebsocketService) {}
 
@@ -32,5 +33,18 @@ export class ChatComponent implements OnInit, OnDestroy {
       );
       this.messageContent = '';
     }
+  }
+
+  switchUser() {
+    this.currentUserId = this.currentUserId === 1 ? 2 : 1;
+    this.currentUserRole = this.currentUserId === 1 ? 'CLIENT' : 'CONSEILLER';
+  }
+
+  isCurrentUser(userId: number): boolean {
+    return userId === this.currentUserId;
+  }
+
+  getUserRole(userId: number): string {
+    return userId === 1 ? 'CLIENT' : 'CONSEILLER';
   }
 }

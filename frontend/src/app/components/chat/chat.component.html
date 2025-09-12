@@ -1,13 +1,36 @@
 <div class="chat-container">
   <div class="chat-header">
-    <h2>Chat Service Client</h2>
+    <h2>Chat Service Client - Your Car Your Way</h2>
+    <div class="user-info">
+      Connecté en tant que: <strong>{{ currentUserRole }}</strong>
+      <button (click)="switchUser()" class="switch-button">
+        Basculer vers {{ currentUserId === 1 ? "CONSEILLER" : "CLIENT" }}
+      </button>
+    </div>
   </div>
 
   <div class="messages-container">
-    <div *ngFor="let message of messages" class="message">
-      <span class="user-id">User {{ message.userId }}:</span>
-      <span class="content">{{ message.content }}</span>
-      <span class="timestamp">{{ message.timestamp | date : "short" }}</span>
+    <div
+      *ngFor="let message of messages"
+      class="message"
+      [ngClass]="{
+        'message-own': isCurrentUser(message.userId),
+        'message-other': !isCurrentUser(message.userId)
+      }"
+    >
+      <div class="message-header">
+        <span
+          class="user-role"
+          [ngClass]="{
+            'role-client': getUserRole(message.userId) === 'CLIENT',
+            'role-conseiller': getUserRole(message.userId) === 'CONSEILLER'
+          }"
+        >
+          {{ getUserRole(message.userId) }}
+        </span>
+        <span class="timestamp">{{ message.timestamp | date : "short" }}</span>
+      </div>
+      <div class="message-content">{{ message.content }}</div>
     </div>
   </div>
 
@@ -15,7 +38,7 @@
     <input
       [(ngModel)]="messageContent"
       (keyup.enter)="sendMessage()"
-      placeholder="Tapez votre message..."
+      placeholder="Tapez votre message en tant que {{ currentUserRole }}..."
       class="message-input"
     />
     <button (click)="sendMessage()" class="send-button">Envoyer</button>
