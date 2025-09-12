@@ -1,0 +1,23 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <h2>Chat Service Client</h2>
+  </div>
+
+  <div class="messages-container">
+    <div *ngFor="let message of messages" class="message">
+      <span class="user-id">User {{ message.userId }}:</span>
+      <span class="content">{{ message.content }}</span>
+      <span class="timestamp">{{ message.timestamp | date : "short" }}</span>
+    </div>
+  </div>
+
+  <div class="input-container">
+    <input
+      [(ngModel)]="messageContent"
+      (keyup.enter)="sendMessage()"
+      placeholder="Tapez votre message..."
+      class="message-input"
+    />
+    <button (click)="sendMessage()" class="send-button">Envoyer</button>
+  </div>
+</div>
