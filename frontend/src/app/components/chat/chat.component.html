@@ -1,46 +1,71 @@
-<div class="chat-container">
-  <div class="chat-header">
-    <h2>Chat Service Client - Your Car Your Way</h2>
-    <div class="user-info">
-      Connecté en tant que: <strong>{{ currentUserRole }}</strong>
-      <button (click)="switchUser()" class="switch-button">
-        Basculer vers {{ currentUserId === 1 ? "CONSEILLER" : "CLIENT" }}
-      </button>
+<div class="chat-app">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h3>Online Users</h3>
     </div>
-  </div>
-
-  <div class="messages-container">
-    <div
-      *ngFor="let message of messages"
-      class="message"
-      [ngClass]="{
-        'message-own': isCurrentUser(message.userId),
-        'message-other': !isCurrentUser(message.userId)
-      }"
-    >
-      <div class="message-header">
-        <span
-          class="user-role"
-          [ngClass]="{
-            'role-client': getUserRole(message.userId) === 'CLIENT',
-            'role-conseiller': getUserRole(message.userId) === 'CONSEILLER'
-          }"
-        >
-          {{ getUserRole(message.userId) }}
-        </span>
-        <span class="timestamp">{{ message.timestamp | date : "short" }}</span>
+    <div class="users-list">
+      <div
+        *ngFor="let user of users"
+        class="user-item"
+        [class.active]="user.id === currentUserId"
+        (click)="switchToUser(user.id)"
+      >
+        <div class="user-avatar">👤</div>
+        <div class="user-info">
+          <div class="user-name">{{ getUserName(user.id) }}</div>
+          <div class="user-role">{{ user.role }}</div>
+        </div>
       </div>
-      <div class="message-content">{{ message.content }}</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-option">Support</div>
+      <div class="sidebar-option">Logout</div>
     </div>
   </div>
 
-  <div class="input-container">
-    <input
-      [(ngModel)]="messageContent"
-      (keyup.enter)="sendMessage()"
-      placeholder="Tapez votre message en tant que {{ currentUserRole }}..."
-      class="message-input"
-    />
-    <button (click)="sendMessage()" class="send-button">Envoyer</button>
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2>Your Car Your Way App : Chat</h2>
+      <div class="user-info">
+        Connecté en tant que: <strong>{{ currentUserRole }}</strong>
+      </div>
+    </div>
+
+    <div class="messages-container">
+      <div
+        *ngFor="let message of messages"
+        class="message"
+        [ngClass]="{
+          'message-own': isCurrentUser(message.userId),
+          'message-other': !isCurrentUser(message.userId)
+        }"
+      >
+        <div class="message-header">
+          <span
+            class="user-role"
+            [ngClass]="{
+              'role-client': getUserRole(message.userId) === 'CLIENT',
+              'role-conseiller': getUserRole(message.userId) === 'CONSEILLER'
+            }"
+          >
+            {{ getUserRole(message.userId) }}
+          </span>
+          <span class="timestamp">{{
+            message.timestamp | date : "short"
+          }}</span>
+        </div>
+        <div class="message-content">{{ message.content }}</div>
+      </div>
+    </div>
+
+    <div class="input-container">
+      <input
+        [(ngModel)]="messageContent"
+        (keyup.enter)="sendMessage()"
+        placeholder="Type your message..."
+        class="message-input"
+      />
+      <button (click)="sendMessage()" class="send-button">Send</button>
+    </div>
   </div>
 </div>

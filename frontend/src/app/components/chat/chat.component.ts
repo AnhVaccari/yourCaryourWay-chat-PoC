@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { User, UserService } from 'src/app/services/user.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
@@ -9,15 +10,30 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 export class ChatComponent implements OnInit, OnDestroy {
   messages: any[] = [];
   messageContent = '';
-  currentUserId = 1; // Simuler utilisateur client
-  currentUserRole = 'CLIENT';
+  currentUserId = 2; // Fixé en tant que conseiller
+  currentUserRole = 'CONSEILLER';
+  users: User[] = [];
 
-  constructor(private websocketService: WebsocketService) {}
+  // Mapping des noms
+  userNames: { [key: number]: string } = {
+    1: 'John Doe',
+    2: 'Amanda Smith',
+  };
+
+  constructor(
+    private websocketService: WebsocketService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     this.websocketService.connect();
     this.websocketService.messages$.subscribe((messages) => {
       this.messages = messages;
+    });
+
+    // Récupérer la liste des utilisateurs
+    this.userService.getAllUsers().subscribe((users) => {
+      this.users = users;
     });
   }
 
@@ -35,16 +51,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  switchUser() {
-    this.currentUserId = this.currentUserId === 1 ? 2 : 1;
-    this.currentUserRole = this.currentUserId === 1 ? 'CLIENT' : 'CONSEILLER';
-  }
-
   isCurrentUser(userId: number): boolean {
     return userId === this.currentUserId;
   }
 
   getUserRole(userId: number): string {
     return userId === 1 ? 'CLIENT' : 'CONSEILLER';
+  }
+
+  getUserName(userId: number): string {
+    return this.userNames[userId] || `User ${userId}`;
+  }
+
+  // Méthode pour changer d'utilisateur actif
+  switchToUser(userId: number) {
+    this.currentUserId = userId;
+    this.currentUserRole = userId === 1 ? 'CLIENT' : 'CONSEILLER';
   }
 }

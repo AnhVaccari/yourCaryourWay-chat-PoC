@@ -24,9 +24,6 @@ public class DataLoader implements CommandLineRunner {
             userRepository.save(client);
             userRepository.save(conseiller);
 
-            System.out.println("Utilisateurs de test créés:");
-            System.out.println("Client: client@test.com");
-            System.out.println("Conseiller: conseiller@test.com");
         }
     }
 }
