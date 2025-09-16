@@ -1,7 +1,7 @@
 <div class="chat-app">
   <div class="sidebar">
     <div class="sidebar-header">
-      <h3>Online Users</h3>
+      <h3>Utilisateurs</h3>
     </div>
     <div class="users-list">
       <div
@@ -19,13 +19,11 @@
     </div>
     <div class="sidebar-footer">
       <div class="sidebar-option">Support</div>
-      <div class="sidebar-option">Logout</div>
     </div>
   </div>
-
   <div class="chat-container">
     <div class="chat-header">
-      <h2>Your Car Your Way App : Chat</h2>
+      <h2>Your Car Your Way : Chat</h2>
       <div class="user-info">
         Connecté en tant que: <strong>{{ currentUserRole }}</strong>
       </div>
@@ -62,10 +60,10 @@
       <input
         [(ngModel)]="messageContent"
         (keyup.enter)="sendMessage()"
-        placeholder="Type your message..."
+        placeholder="Ecrivez votre message..."
         class="message-input"
       />
-      <button (click)="sendMessage()" class="send-button">Send</button>
+      <button (click)="sendMessage()" class="send-button">Envoyer</button>
     </div>
   </div>
 </div>

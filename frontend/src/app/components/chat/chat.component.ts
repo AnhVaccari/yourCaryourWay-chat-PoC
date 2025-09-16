@@ -16,8 +16,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   // Mapping des noms
   userNames: { [key: number]: string } = {
-    1: 'John Doe',
-    2: 'Amanda Smith',
+    1: 'Jean Petit',
+    2: 'Laura Dupont',
   };
 
   constructor(
