@@ -1,0 +1,99 @@
+@startuml
+!theme plain
+title Diagramme de Classes - Your Car Your Way 
+
+class User {
+  - id : Long
+  - email : String
+  - password : String
+  - firstName : String
+  - lastName : String
+  - dateOfBirth : Date
+  - phoneNumber : String
+  - address : String
+  - drivingLicenseNumber : String
+  - createdAt : Date
+}
+
+class Vehicle {
+  - id : Long
+  - brand : String
+  - model : String
+  - year : Integer
+  - licensePlate : String
+  - dailyRate : BigDecimal
+  - available : Boolean
+}
+
+class Booking {
+  - id : Long
+  - startDate : Date
+  - endDate : Date
+  - pickupLocation : String
+  - returnLocation : String
+  - totalAmount : BigDecimal
+  - status : String
+  - createdAt : Date
+}
+
+class Payment {
+  - id : Long
+  - amount : BigDecimal
+  - currency : String
+  - paymentMethod : String
+  - transactionId : String
+  - status : String
+  - createdAt : Date
+}
+
+class Agency {
+  - id : Long
+  - name : String
+  - address : String
+  - phoneNumber : String
+  - email : String
+  - openingHours : String
+}
+
+class VehicleCategory {
+  - id : Long
+  - code : String
+  - name : String
+  - description : String
+  - passengerCapacity : Integer
+}
+
+class Location {
+  - id : Long
+  - city : String
+  - country : String
+  - zipCode : String
+}
+
+class Offer {
+  - id : Long
+  - startDate : Date
+  - endDate : Date
+  - pickupLocationId : Long
+  - returnLocationId : Long
+  - price : BigDecimal
+  - available : Boolean
+  - createdAt : Date
+}
+
+' Relations principales
+User ||--o{ Booking : "fait"
+Booking ||--|| Payment : "a"
+Booking ||--|| Offer : "se base sur"
+
+' Relations véhicules et agences
+Agency ||--o{ Vehicle : "possède"
+VehicleCategory ||--o{ Vehicle : "catégorise"
+Location ||--o{ Agency : "situe"
+
+' Relations offres
+Vehicle ||--o{ Offer : "génère"
+Location ||--o{ Offer : "lieu départ"
+Location ||--o{ Offer : "lieu retour"
+
+@enduml
