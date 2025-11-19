@@ -1,7 +1,6 @@
 -- =============================================================================
--- Schéma Base de Données - Your Car Your Way
+-- Schéma Base de Données - Your Car Your Way (7 tables)
 -- =============================================================================
-
 
 -- =============================================================================
 -- TABLES DE RÉFÉRENCE 
@@ -63,18 +62,6 @@ CREATE TABLE Vehicle (
     available BOOLEAN DEFAULT TRUE
 );
 
--- Table Offer
-CREATE TABLE Offer (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    startDate DATETIME NOT NULL,
-    endDate DATETIME NOT NULL,
-    pickupLocationId BIGINT,
-    returnLocationId BIGINT,
-    price DECIMAL(10,2) NOT NULL,
-    available BOOLEAN DEFAULT TRUE,
-    createdAt DATETIME DEFAULT NOW()
-);
-
 -- Table Payment
 CREATE TABLE Payment (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -99,7 +86,7 @@ CREATE TABLE Booking (
 );
 
 -- =============================================================================
--- AJOUT DE CLES ETRANGERES ENTRE TABLES
+-- AJOUT DE CLÉS ÉTRANGÈRES ENTRE TABLES
 -- =============================================================================
 
 ALTER TABLE Agency ADD COLUMN locationId BIGINT;
@@ -110,16 +97,11 @@ ALTER TABLE Vehicle ADD COLUMN categoryId BIGINT;
 ALTER TABLE Vehicle ADD FOREIGN KEY (agencyId) REFERENCES Agency(id);
 ALTER TABLE Vehicle ADD FOREIGN KEY (categoryId) REFERENCES VehicleCategory(id);
 
-ALTER TABLE Offer ADD COLUMN vehicleId BIGINT;
-ALTER TABLE Offer ADD FOREIGN KEY (vehicleId) REFERENCES Vehicle(id);
-ALTER TABLE Offer ADD FOREIGN KEY (pickupLocationId) REFERENCES Location(id);
-ALTER TABLE Offer ADD FOREIGN KEY (returnLocationId) REFERENCES Location(id);
-
 ALTER TABLE Booking ADD COLUMN userId BIGINT;
-ALTER TABLE Booking ADD COLUMN offerId BIGINT;
+ALTER TABLE Booking ADD COLUMN vehicleId BIGINT;
 ALTER TABLE Booking ADD COLUMN paymentId BIGINT;
 ALTER TABLE Booking ADD FOREIGN KEY (userId) REFERENCES User(id);
-ALTER TABLE Booking ADD FOREIGN KEY (offerId) REFERENCES Offer(id);
+ALTER TABLE Booking ADD FOREIGN KEY (vehicleId) REFERENCES Vehicle(id);
 ALTER TABLE Booking ADD FOREIGN KEY (paymentId) REFERENCES Payment(id);
 
 -- =============================================================================
@@ -139,4 +121,3 @@ INSERT INTO VehicleCategory (Code, [Name], [Description], PassengerCapacity) VAL
 ('ICAR', 'Intermediate', 'Voiture intermédiaire', 5),
 ('SCAR', 'Standard', 'Voiture standard', 5),
 ('FCAR', 'Fullsize', 'Grande voiture', 5);
-

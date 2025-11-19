@@ -35,7 +35,7 @@ export class WebsocketService {
   }
 
   sendMessage(userId: number, content: string) {
-    //Envoie vers /app/sendMessage di backend
+    //Envoie vers /app/sendMessage du backend
     if (this.stompClient?.connected) {
       this.stompClient.publish({
         destination: '/app/sendMessage',
