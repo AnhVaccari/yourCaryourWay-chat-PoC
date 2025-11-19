@@ -70,30 +70,14 @@ class Location {
   - zipCode : String
 }
 
-class Offer {
-  - id : Long
-  - startDate : Date
-  - endDate : Date
-  - pickupLocationId : Long
-  - returnLocationId : Long
-  - price : BigDecimal
-  - available : Boolean
-  - createdAt : Date
-}
-
 ' Relations principales
 User ||--o{ Booking : "fait"
 Booking ||--|| Payment : "a"
-Booking ||--|| Offer : "se base sur"
+Booking ||--|| Vehicle : "réserve"
 
 ' Relations véhicules et agences
 Agency ||--o{ Vehicle : "possède"
 VehicleCategory ||--o{ Vehicle : "catégorise"
 Location ||--o{ Agency : "situe"
-
-' Relations offres
-Vehicle ||--o{ Offer : "génère"
-Location ||--o{ Offer : "lieu départ"
-Location ||--o{ Offer : "lieu retour"
 
 @enduml
