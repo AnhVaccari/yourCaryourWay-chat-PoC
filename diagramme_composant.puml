@@ -1,0 +1,53 @@
+@startuml
+!theme plain
+title Diagramme de Composants - Your Car Your Way
+
+package "Frontend - Angular 17 Application" {
+    component [User Interface] as UserUI
+    component [Booking Interface] as BookingUI
+    component [Vehicle Interface] as VehicleUI
+    component [Chat Interface] as ChatUI
+    component [Payment Interface] as PaymentUI
+    component [Agency Interface] as AgencyUI
+}
+
+package "Backend - Spring Boot 3 Monolithique" {
+    component [Module User] as UserModule
+    component [Module Booking] as BookingModule
+    component [Module Vehicle] as VehicleModule
+    component [Module Chat] as ChatModule
+    component [Module Payment] as PaymentModule
+    component [Module Notification] as NotificationModule
+    component [Module Agency] as AgencyModule
+}
+
+database "MySQL 8 Database" as MySQL
+
+package "Services Externes" {
+    component [Stripe API] as Stripe
+    component [Mailgun API] as Mailgun
+    component [Zoom SDK] as Zoom
+}
+
+' Relations Frontend -> Backend
+UserUI ||-- UserModule : REST API
+BookingUI ||-- BookingModule : REST API
+VehicleUI ||-- VehicleModule : REST API
+ChatUI ||-- ChatModule : WebSocket
+PaymentUI ||-- PaymentModule : REST API
+AgencyUI ||-- AgencyModule : REST API
+
+' Relations Backend -> Database
+UserModule --> MySQL : SQL
+BookingModule --> MySQL : SQL
+VehicleModule --> MySQL : SQL
+ChatModule --> MySQL : SQL
+PaymentModule --> MySQL : SQL
+AgencyModule --> MySQL : SQL
+
+' Relations Backend -> Services Externes
+PaymentModule --> Stripe : HTTPS API
+NotificationModule --> Mailgun : HTTPS API
+ChatModule --> Zoom : SDK Integration
+
+@enduml

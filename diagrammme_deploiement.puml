@@ -1,0 +1,54 @@
+@startuml
+
+title Diagramme de Déploiement - Your Car Your Way
+
+actor "Navigateur Web Utilisateur" as User
+
+package "Amazon Web Services (AWS)" {
+    
+    component "AWS API Gateway" as gateway
+    
+    component "Stockage Fichiers AWS\n(S3)" as s3 {
+        [Fichiers Statiques\nAngular 17]
+    }
+    
+    component "Répartiteur de Charge AWS\n(Load Balancer)" as elb
+    
+    component "Serveur AWS 1\n(EC2)" as ec2_1 {
+        [Application\nSpring Boot 3]
+    }
+    
+    component "Serveur AWS 2\n(EC2)" as ec2_2 {
+        [Application\nSpring Boot 3]
+    }
+    
+    database "Base de Données\nMySQL AWS\n(RDS)" as rds
+}
+
+cloud "Services Externes" {
+    component Stripe
+    component Zoom
+    component Mailgun
+}
+
+User -down-> gateway : HTTPS
+User -down-> s3 : HTTPS
+
+gateway -down-> elb : HTTP
+s3 -down-> elb : HTTP
+
+elb -down-> ec2_1 : HTTP
+elb -down-> ec2_2 : HTTP
+
+ec2_1 -down-> rds : MySQL
+ec2_2 -down-> rds : MySQL
+
+ec2_1 -right-> Stripe : HTTPS
+ec2_1 -right-> Zoom : HTTPS
+ec2_1 -right-> Mailgun : HTTPS
+
+ec2_2 -right-> Stripe : HTTPS
+ec2_2 -right-> Zoom : HTTPS
+ec2_2 -right-> Mailgun : HTTPS
+
+@enduml

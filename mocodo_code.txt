@@ -1,0 +1,71 @@
+------------------------MCD--------------------------------
+
+CHAT_CONVERSATION: conversation_id, user_id, agent_id, status, created_at, closed_at
+STARTS, 11 USER, 0N CHAT_CONVERSATION
+USER: user_id, email, password, first_name, last_name, date_of_birth, phone_number, address, driving_license_number, created_at
+MAKES, 11 USER, 0N BOOKING
+BOOKING: booking_id, start_date, end_date, pickup_location, return_location, total_amount, status, created_at
+RESERVES, 11 BOOKING, 11 VEHICLE
+VEHICLE_CATEGORY: category_id, code, name, description, passenger_capacity
+
+CONTAINS, 11 CHAT_CONVERSATION, 0N CHAT_MESSAGE
+:
+SENDS, 11 USER, 0N MESSAGE
+MESSAGE: message_id, message_type, content, status, created_at, agent_response, responded_at
+PAYS, 11 BOOKING, 11 PAYMENT
+VEHICLE: vehicle_id, brand, model, year, license_plate, daily_rate, available
+CATEGORIZED, 11 VEHICLE_CATEGORY, 0N VEHICLE
+
+CHAT_MESSAGE: chat_message_id, conversation_id, sender_type, sender_id, content, sent_at
+:
+:
+:
+PAYMENT: payment_id, amount, currency, payment_method, transaction_id, status, created_at
+OWNS, 11 AGENCY, 0N VEHICLE
+AGENCY: agency_id, name, address, phone_number, email, opening_hours
+
+:
+:
+:
+:
+:
+LOCATION: location_id, city, country, zip_code
+LOCATED, 11 LOCATION, 0N AGENCY
+
+
+-------------------------MLD--------------------------
+
+%%mocodo
+
+:
+AGENCY: agency_id_BIGINT, name_VARCHAR_200, address_TEXT, phone_number_VARCHAR_20, email_VARCHAR_255, opening_hours_TEXT, #location_id_BIGINT > LOCATION > location_id_BIGINT
+:
+VEHICLE: vehicle_id_BIGINT, brand_VARCHAR_50, model_VARCHAR_100, year_INT, license_plate_VARCHAR_20, daily_rate_DECIMAL_10_2, available_BOOLEAN, #category_id_BIGINT > VEHICLE_CATEGORY > category_id_BIGINT, #agency_id_BIGINT > AGENCY > agency_id_BIGINT
+:
+VEHICLE_CATEGORY: category_id_BIGINT, code_VARCHAR_4, name_VARCHAR_100, description_TEXT, passenger_capacity_INT
+:
+:
+:
+
+:
+LOCATION: location_id_BIGINT, city_VARCHAR_100, country_VARCHAR_100, zip_code_VARCHAR_20
+:
+BOOKING: booking_id_BIGINT, start_date_DATETIME, end_date_DATETIME, pickup_location_VARCHAR_200, return_location_VARCHAR_200, total_amount_DECIMAL_10_2, status_VARCHAR_50, created_at_TIMESTAMP, #user_id_BIGINT > USER > user_id_BIGINT, #vehicle_id_BIGINT > VEHICLE > vehicle_id_BIGINT
+:
+USER: user_id_BIGINT, email_VARCHAR_255, password_VARCHAR_255, first_name_VARCHAR_100, last_name_VARCHAR_100, date_of_birth_DATE, phone_number_VARCHAR_20, address_TEXT, driving_license_number_VARCHAR_50, created_at_TIMESTAMP
+:
+MESSAGE: message_id_BIGINT, message_type_VARCHAR_50, content_TEXT, status_VARCHAR_50, created_at_TIMESTAMP, agent_response_TEXT, responded_at_TIMESTAMP, #user_id_BIGINT > USER > user_id_BIGINT
+:
+
+:
+:
+:
+PAYMENT: payment_id_BIGINT, amount_DECIMAL_10_2, currency_VARCHAR_5, payment_method_VARCHAR_50, transaction_id_VARCHAR_255, status_VARCHAR_50, created_at_TIMESTAMP, #booking_id_BIGINT > BOOKING > booking_id_BIGINT
+:
+CHAT_CONVERSATION: conversation_id_BIGINT, agent_id_BIGINT, status_VARCHAR_50, created_at_TIMESTAMP, closed_at_TIMESTAMP, #user_id_BIGINT > USER > user_id_BIGINT
+:
+CHAT_MESSAGE: chat_message_id_BIGINT, sender_type_VARCHAR_20, sender_id_BIGINT, content_TEXT, sent_at_TIMESTAMP, #conversation_id_BIGINT > CHAT_CONVERSATION > conversation_id_BIGINT
+:
+
+
+
