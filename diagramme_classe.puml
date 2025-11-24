@@ -12,7 +12,17 @@ class User {
   - phoneNumber : String
   - address : String
   - drivingLicenseNumber : String
+  - drivingLicenseCountry : String
+  - drivingLicenseExpiry : Date
+  - stripeCustomerId : String
   - createdAt : Date
+}
+
+class AdditionalDriver {
+  - id : Long
+  - firstName : String
+  - lastName : String
+  - drivingLicenseNumber : String
 }
 
 class Message {
@@ -49,6 +59,8 @@ class Vehicle {
   - licensePlate : String
   - dailyRate : BigDecimal
   - available : Boolean
+  - photosUrls : String
+  - optionalEquipment : String
 }
 
 class Booking {
@@ -59,6 +71,8 @@ class Booking {
   - returnLocation : String
   - totalAmount : BigDecimal
   - status : String
+  - numberOfDrivers : Integer
+  - selectedOptions : String
   - createdAt : Date
 }
 
@@ -79,6 +93,13 @@ class Agency {
   - phoneNumber : String
   - email : String
   - openingHours : String
+  - gpsLatitude : BigDecimal
+  - gpsLongitude : BigDecimal
+  - servicesAvailable : String
+  - accessibilityPmr : Boolean
+  - photosUrls : String
+  - averageRating : BigDecimal
+  - equipment : String
 }
 
 class VehicleCategory {
@@ -97,6 +118,7 @@ class Location {
 }
 
 ' Relations principales
+User ||--o{ AdditionalDriver : "gère"
 User ||--o{ Booking : "fait"
 User ||--o{ Message : "envoie"
 User ||--o{ ChatConversation : "démarre"

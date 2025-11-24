@@ -3,87 +3,58 @@
 -- Modèle de données relationnel complet avec support chat
 -- =============================================================================
 
--- Table USER
+-- Table USER - 
 CREATE TABLE USER (
-    user_id BIGINT PRIMARY KEY,
-    email VARCHAR(255),
-    [password] VARCHAR(255),
+    user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    [password] VARCHAR(255) NOT NULL,
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     date_of_birth DATE,
     phone_number VARCHAR(20),
     [address] TEXT,
     driving_license_number VARCHAR(50),
-    created_at TIMESTAMP
+    driving_license_country VARCHAR(50),
+    driving_license_expiry DATE,
+    stripe_customer_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Table MESSAGE (Support asynchrone)
-CREATE TABLE MESSAGE (
-    message_id BIGINT PRIMARY KEY,
-    user_id BIGINT,
-    message_type VARCHAR(50),
-    content TEXT,
-    [status] VARCHAR(50),
-    created_at TIMESTAMP,
-    agent_response TEXT,
-    responded_at TIMESTAMP,
+-- TABLE pour conducteurs supplémentaires
+CREATE TABLE ADDITIONAL_DRIVER (
+    driver_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    driving_license_number VARCHAR(50) NOT NULL,
+    driving_license_country VARCHAR(50),
+    driving_license_expiry DATE,
     FOREIGN KEY (user_id) REFERENCES USER(user_id)
 );
 
--- Table CHAT_CONVERSATION (Chat temps réel)
-CREATE TABLE CHAT_CONVERSATION (
-    conversation_id BIGINT PRIMARY KEY,
-    user_id BIGINT,
-    agent_id BIGINT,
-    [status] VARCHAR(50),
-    created_at TIMESTAMP,
-    closed_at TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES USER(user_id)
-);
-
--- Table CHAT_MESSAGE (Messages du chat temps réel)
-CREATE TABLE CHAT_MESSAGE (
-    chat_message_id BIGINT PRIMARY KEY,
-    conversation_id BIGINT,
-    sender_type VARCHAR(20),
-    sender_id BIGINT,
-    content TEXT,
-    sent_at TIMESTAMP,
-    FOREIGN KEY (conversation_id) REFERENCES CHAT_CONVERSATION(conversation_id)
-);
-
--- Table VEHICLE_CATEGORY
-CREATE TABLE VEHICLE_CATEGORY (
-    category_id BIGINT PRIMARY KEY,
-    code VARCHAR(4),
-    [name] VARCHAR(100),
-    [description] TEXT,
-    passenger_capacity INT
-);
-
--- Table LOCATION
-CREATE TABLE LOCATION (
-    location_id BIGINT PRIMARY KEY,
-    city VARCHAR(100),
-    country VARCHAR(100),
-    zip_code VARCHAR(20)
-);
-
--- Table AGENCY
+-- Table AGENCY - 
 CREATE TABLE AGENCY (
-    agency_id BIGINT PRIMARY KEY,
+    agency_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     location_id BIGINT,
-    [name] VARCHAR(200),
+    [name] VARCHAR(200) NOT NULL,
     [address] TEXT,
+    gps_latitude DECIMAL(10,8),
+    gps_longitude DECIMAL(11,8),
     phone_number VARCHAR(20),
     email VARCHAR(255),
     opening_hours TEXT,
+    services_available TEXT, 
+    accessibility_pmr BOOLEAN DEFAULT FALSE,
+    photos_urls TEXT,
+    average_rating DECIMAL(3,2) DEFAULT 0.00,
+    equipment TEXT,
     FOREIGN KEY (location_id) REFERENCES LOCATION(location_id)
 );
 
--- Table VEHICLE
+-- Table VEHICLE - 
 CREATE TABLE VEHICLE (
-    vehicle_id BIGINT PRIMARY KEY,
+    vehicle_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     category_id BIGINT,
     agency_id BIGINT,
     brand VARCHAR(50),
@@ -91,38 +62,32 @@ CREATE TABLE VEHICLE (
     [year] INT,
     license_plate VARCHAR(20),
     daily_rate DECIMAL(10,2),
-    available BOOLEAN,
+    available BOOLEAN DEFAULT TRUE,
+    photos_urls TEXT, 
+    optional_equipment TEXT, 
     FOREIGN KEY (category_id) REFERENCES VEHICLE_CATEGORY(category_id),
     FOREIGN KEY (agency_id) REFERENCES AGENCY(agency_id)
 );
 
--- Table BOOKING
+-- Table BOOKING - 
 CREATE TABLE BOOKING (
-    booking_id BIGINT PRIMARY KEY,
+    booking_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT,
     vehicle_id BIGINT,
-    start_date DATETIME,
+    [start_date] DATETIME,
     end_date DATETIME,
     pickup_location VARCHAR(200),
     return_location VARCHAR(200),
     total_amount DECIMAL(10,2),
     [status] VARCHAR(50),
-    created_at TIMESTAMP,
+    number_of_drivers INT DEFAULT 1,
+    selected_options TEXT, 
+    cancellation_reason TEXT,
+    modification_history TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES USER(user_id),
     FOREIGN KEY (vehicle_id) REFERENCES VEHICLE(vehicle_id)
-);
-
--- Table PAYMENT
-CREATE TABLE PAYMENT (
-    payment_id BIGINT PRIMARY KEY,
-    booking_id BIGINT,
-    amount DECIMAL(10,2),
-    currency VARCHAR(5),
-    payment_method VARCHAR(50),
-    transaction_id VARCHAR(255),
-    [status] VARCHAR(50),
-    created_at TIMESTAMP,
-    FOREIGN KEY (booking_id) REFERENCES BOOKING(booking_id)
 );
 
 -- =============================================================================
